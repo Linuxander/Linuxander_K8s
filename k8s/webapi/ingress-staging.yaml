@@ -1,0 +1,43 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-staging
+  namespace: linuxander
+  annotations:
+   cert-manager.io/issuer: letsencrypt-nginx-staging
+   nginx.ingress.kubernetes.io/rewrite-target: / # This resolved the challenge 404 error we got after resolving the challenge http01 propagation error in ingress-nginx-controller service
+   # Other annotations found during troubleshooting that might be useful in the future
+   #cert-manager.io/acme-challenge-type: http01
+   #kubernetes.io/ingress.class: addon-http-application-routing
+   #nginx.ingress.kubernetes.io/proxy-body-size: 20m
+   #nginx.ingress.kubernetes.io/ssl-redirect: "false"
+   #acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  tls:
+   - hosts:
+     - [naked URL]
+     - [URL with www suffix]
+     secretName: letsencrypt-nginx
+  rules:
+    - host: [naked URL]
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webapi-svc
+                port:
+                  number: 8000
+    - host: [URL with www suffix]
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webapi-svc
+                port:
+                  number: 8000
+  ingressClassName: nginx

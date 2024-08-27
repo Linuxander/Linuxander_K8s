@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi-deployment
+  namespace: linuxander
+  labels:
+    app: webapi-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapi-deployment
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: webapi-deployment
+    spec:
+      containers:
+        - name: webapi-container
+          image: [DockerHub repo name here]/[image name here]:[image tag here]
+          imagePullPolicy: Always
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - >-
+                echo 'Running makemigrations...';
+                python /home/app/webapp/djangoproject/manage.py makemigrations;
+                echo '';
+                echo 'Running migrate...';
+                python /home/app/webapp/djangoproject/manage.py migrate;
+                echo '';
+                echo 'Running collectstatic...';
+                python /home/app/webapp/djangoproject/manage.py collectstatic --noinput;
+                echo 'Running runserver...';
+                python /home/app/webapp/djangoproject/manage.py runserver 0.0.0.0:8000;
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: mysql-secrets
+              mountPath: "/etc/mysql-secrets"
+              readOnly: true
+            - name: webapi-secrets
+              mountPath: "/etc/webapi-secrets"
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+      imagePullSecrets:
+        - name: dockerhub-secrets
+      volumes:
+        - name: mysql-secrets
+          secret:
+            secretName: mysql-secrets
+        - name: webapi-secrets
+          secret:
+            secretName: webapi-secrets
+      initContainers:
+        - name: init-webapi
+          image: busybox:1.28
+          command: ['sh', '-c', "echo 'Waiting for a few seconds to ensure the mysql-svc is up and its related pod is available.'; sleep 10;"]

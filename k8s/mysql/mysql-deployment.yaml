@@ -1,0 +1,58 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+  namespace: linuxander
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql-deployment
+  clusterIP: None
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: linuxander
+spec:
+  selector:
+    matchLabels:
+      app: mysql-deployment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-deployment
+    spec:
+      containers:
+        - image: mysql:5.7.40
+          imagePullPolicy: Always
+          name: mysql-container
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: root-pw
+          ports:
+            - containerPort: 3306
+              name: mysql-cont-port
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+            - name: mysql-secret-init-sql
+              mountPath: "/docker-entrypoint-initdb.d"
+              readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+        - name: mysql-secret-init-sql
+          secret:
+            secretName: mysql-secret-init-sql
