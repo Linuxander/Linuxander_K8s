@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Experience</title>
+
+{% endblock %}
+
+{% block nav-experience %}
+	<button type="button" class="btn btn-outline-dark" data-toggle="button" aria-pressed="false">
+		Experience
+	</button>
+{% endblock %}
+
+{% block body %}
+
+	{% for employer in employers %}
+
+		<p>
+			<b>{{ employer.title }}</b> at
+			{{ employer.company }},
+			{{ employer.city }},
+			{{ employer.state }}
+		</p>
+		<ul>
+			{% for task in tasks %}
+				{% if task.employers_uuid.company == employer.company %}
+					<li>{{ task.blurb }}</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+
+	{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>About</title>
+
+{% endblock %}
+
+
+{% block nav-about %}
+{% endblock %}
+
+{% block body %}
+
+	{% for content in contents %}
+		{% if content.title == "Intro" %}
+			<div>
+				{% autoescape off %}
+					{{ content.content }}
+				{% endautoescape %}
+			</div>
+			<br/>
+		{% else %}
+			<div class="jumbotron text-center" style="background:transparent !important">
+				<h3>{{ content.title }}</h3>
+			</div>
+			<div>
+				{% autoescape off %}
+					{{ content.content }}
+				{% endautoescape %}
+			</div>
+			<br/>	
+		{% endif %}
+	{% endfor %}
+
+{% endblock %}

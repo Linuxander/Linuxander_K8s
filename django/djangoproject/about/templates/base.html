@@ -1,0 +1,60 @@
+<html>
+<head>
+	<script
+		src="https://code.jquery.com/jquery-3.5.1.slim.js"
+		integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM="
+		crossorigin="anonymous"></script>
+	<link 
+		rel="stylesheet" 
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
+		crossorigin="anonymous">
+	<script 
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" 
+		integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" 
+		crossorigin="anonymous"></script>
+	<style>
+		body {
+		  background-color: #000000;
+		  color: #999999;
+		}
+	</style>
+	<link rel="apple-touch-icon" sizes="180x180" href="https://linuxander.s3.amazonaws.com/website/images/favcons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://linuxander.s3.amazonaws.com/website/images/favcons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://linuxander.s3.amazonaws.com/website/images/favcons/favicon-16x16.png">
+	<link rel="manifest" href="https://linuxander.s3.amazonaws.com/website/images/favcons/site.webmanifest">
+	{% load static %}
+	{% block head %}
+	{% endblock %}
+</head>
+<body>
+	<br/>
+	<div class='container'>
+		<img src="https://linuxander.s3.amazonaws.com/website/images/Logo_Linuxander_v1_regular_vector.png" style="height:3%"/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		{% block nav-about %}
+		{% endblock %}
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		{% block nav-experience %}
+		{% endblock %}
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<div class='container'>
+			{% block body %}
+			{% endblock %}
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+		</div>
+	</div>
+</body>
+</html>
