@@ -1,0 +1,9 @@
+FROM mysql:5.7
+
+ENV DockerHOME=/home/app/database
+
+RUN mkdir -p $DockerHOME  
+
+WORKDIR $DockerHOME  
+
+EXPOSE 3306

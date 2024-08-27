@@ -1,0 +1,30 @@
+FROM python:3.8   
+
+ENV DockerHOME=/home/app/webapp
+
+RUN apt update -y
+RUN apt install vim tmux -y
+RUN apt install iputils-ping -y
+
+RUN mkdir -p $DockerHOME  
+
+WORKDIR $DockerHOME  
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1  
+
+RUN pip install --upgrade pip  
+
+COPY django/ $DockerHOME  
+
+RUN pip install -r requirements.txt  
+
+EXPOSE 8000  
+
+CMD python /home/app/webapp/djangoproject/manage.py makemigrations
+
+CMD python /home/app/webapp/djangoproject/manage.py migrate
+
+CMD python /home/app/webapp/djangoproject/manage.py collectstatic --noinput
+
+CMD python /home/app/webapp/djangoproject/manage.py runserver 0.0.0.0:8000
