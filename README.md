@@ -56,13 +56,33 @@ NOTE: I only used secrets for exploratory purposes.  It's recommended to create 
 
 
 # Helm
-- Ingress-NGINX
-  - Deployed ingress-nginx using helm
-    - Generated a DigitalOcean Load Balancer (with IP) allowing me to expose my internal Kubernetes app to the outside world
-  - Configured with an issuer resource to route traffic to and from the nginx load balancer and the Django's service resource
+- Ingress-NGINX Controller
+  - Deployed ingress-nginx controller using helm
+  - This generated a DigitalOcean Load Balancer (with IP) allowing me to expose my internal Kubernetes app to the outside world
+
+- Configured Ingress Resource
+  - Defines the how the user traffic traverses through the ingress-nginx load balancer to the Django service which in turn serves the Django application to the user
+
+
 - Cert-Manager
-  - Configured with issuer resource that requested SSL certificates from LetsEncrypt
-  - Debugged a challenging issue as the DigitalOcean documentation was missing critical settings that was preventing automatic SSL certificate renewal from LetsEncrypt
+  - Configured Issuer Resrouce
+    - This file that cert-manager uses to request SSL certificates from LetsEncrypt
+
+- IMPORTANT - DigitalOcean Tutorial & Documentation Bug
+  - Symptom
+    - Cert-Manager fails to renew SSL certificates with LetsEncrypt
+    - Error: http01 challenge failed
+
+- Solution
+  - Add the following annotation to your nginx-values.yaml file:
+    service.beta.kubernetes.io/do-loadbalancer-hostname: [Naked Domain Goes Here]
+
+- Full Description
+  - DigitalOcean omitted a critical configuration in their video tutorials and documentation for the nginx-values.yaml file that would allow LetsEncrypt to autorenew SSL certs three months later. Without the provided annotation fix mentioned above, LetsEncrypt would fail to resolve the http01 challenge because it can't get to it through the load balancer.
+
+
+
+
 
 
 # Monitoring & Alerting
